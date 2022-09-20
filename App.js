@@ -12,6 +12,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {Header} from './src/components/header/header.component';
 
 import {ProductContainer} from './src/features/products/screens/products.screen';
+import {NativeBaseProvider} from 'native-base';
 
 const App = () => {
   // const isDarkMode = useColorScheme() === 'dark';
@@ -27,10 +28,13 @@ const App = () => {
     //     backgroundColor={backgroundStyle.backgroundColor}
     //   />
     // <SafeAreaView style={backgroundStyle}>
-    <View style={styles.container}>
-      <Header />
-      <ProductContainer />
-    </View>
+    <NativeBaseProvider>
+      <View style={styles.container}>
+        <Header />
+        <ProductContainer />
+      </View>
+    </NativeBaseProvider>
+
     // </SafeAreaView>
   );
 };

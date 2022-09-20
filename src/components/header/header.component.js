@@ -20,6 +20,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 5,
-    marginTop: 70, //todo: delete
+    // marginTop: 70, //todo: delete
   },
 });

@@ -25,7 +25,7 @@ export const ProductCard = props => {
         source={{
           uri: image
             ? image
-            : 'https://cdn-icons-png.flaticon.com/512/2618/2618316.png',
+            : 'https://cdn.pixabay.com/photo/2012/04/01/17/29/box-23649_960_720.png',
         }}
       />
       <View style={styles.card} />
