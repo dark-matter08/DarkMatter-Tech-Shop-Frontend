@@ -12,17 +12,7 @@ import {
 } from 'react-native';
 import {theme} from '../../../infrastructure/theme';
 import {ProductComponent} from '../components/product.component';
-import {
-  Container,
-  VStack,
-  Heading,
-  Header,
-  Icon,
-  Item,
-  Input,
-  Box,
-} from 'native-base';
-import {Icon as FIcon} from '../../../components/utils/icon.component';
+import {VStack, Input, Icon} from 'native-base';
 import * as All from '@fortawesome/free-solid-svg-icons';
 import {SearchedProducts} from '../components/searched-products.component';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -34,7 +24,7 @@ var {height} = Dimensions.get('window');
 const data = require('../../../../assets/data/products.json');
 const categories_data = require('../../../../assets/data/categories.json');
 
-export const ProductContainer = () => {
+export const ProductScreen = () => {
   const [products, setProducts] = useState([]);
   const [productsFiltered, setProductsFiltered] = useState([]);
   const [focus, setFocus] = useState();

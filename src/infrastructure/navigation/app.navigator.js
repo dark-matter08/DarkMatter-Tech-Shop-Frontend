@@ -1,34 +1,29 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import * as All from '@fortawesome/free-solid-svg-icons';
 
 import {theme} from '../theme';
-import {Icon} from '../../components';
-import {RestaurantsNavigator} from './restaurants.navigator';
-import {SettingsNavigatior} from './settings.navigator';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {ProductsNavigator} from './product.navigator';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {VStack, Icon} from 'native-base';
+import {AnimatedTabBarNavigator} from 'react-native-animated-nav-tab-bar';
 
-import {MapScreen} from '../../features/map/screens/map.screen';
-import {CheckoutScreen} from '../../features/checkout/screens/checkout.screen';
-
-import {RestaurantContextProvider} from '../../services/restaurants/restaurants.context';
-import {LocationContextProvider} from '../../services/location/location.context';
-import {FavouritesContextProvider} from '../../services/favourites/favourites.context';
-import {CartContextProvider} from '../../services/cart/cart.context';
-
-const Tab = createBottomTabNavigator();
+const Tab = AnimatedTabBarNavigator();
 
 const TAB_ICON = {
-  Restaurants: All.faUtensils,
-  Map: All.faLocationCrosshairs,
-  SettingsScreens: All.faGear,
-  Checkout: All.faShoppingCart,
+  Home: All.faHome,
+  Cart: All.faShoppingCart,
+  Admin: All.faGear,
+  Profile: All.faUser,
 };
 
 const screenOptions = ({route}) => {
   let iconName = TAB_ICON[route.name];
   return {
     tabBarIcon: ({color, size}) => {
-      return <Icon icon={iconName} size={size} color={color} />;
+      return (
+        <Icon size={size} as={FontAwesomeIcon} color={color} icon={iconName} />
+      );
     },
     tabBarActiveTintColor: theme.colors.brand.primary,
     tabBarInactiveTintColor: theme.colors.text_i.disabled,
@@ -39,25 +34,14 @@ const screenOptions = ({route}) => {
 
 export const AppNavigator = () => {
   return (
-    <FavouritesContextProvider>
-      <LocationContextProvider>
-        <RestaurantContextProvider>
-          <CartContextProvider>
-            <Tab.Navigator
-              screenOptions={screenOptions}
-              activeColor={theme.colors.brand.secondary}
-              barStyle={{backgroundColor: theme.colors.brand.primary}}>
-              <Tab.Screen name="Restaurants" component={RestaurantsNavigator} />
-              <Tab.Screen name="Checkout" component={CheckoutScreen} />
-              <Tab.Screen name="Map" component={MapScreen} />
-              <Tab.Screen
-                name="SettingsScreens"
-                component={SettingsNavigatior}
-              />
-            </Tab.Navigator>
-          </CartContextProvider>
-        </RestaurantContextProvider>
-      </LocationContextProvider>
-    </FavouritesContextProvider>
+    <Tab.Navigator
+      screenOptions={screenOptions}
+      activeColor={theme.colors.brand.secondary}
+      barStyle={{backgroundColor: theme.colors.brand.primary}}>
+      <Tab.Screen name="Home" component={ProductsNavigator} />
+      <Tab.Screen name="Cart" component={ProductsNavigator} />
+      <Tab.Screen name="Admin" component={ProductsNavigator} />
+      <Tab.Screen name="Profile" component={ProductsNavigator} />
+    </Tab.Navigator>
   );
 };
