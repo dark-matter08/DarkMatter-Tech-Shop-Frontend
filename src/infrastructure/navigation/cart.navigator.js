@@ -1,25 +1,30 @@
 import React from 'react';
-import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+  TransitionPresets,
+  ModalSlideFromBottomIOS,
+  ModalPresentationIOS,
+} from '@react-navigation/stack';
 import CartScreen from '../../features/cart/screen/cart.screen';
-import {CheckoutScreen} from '../../features/checkout/screens/checkout.screen';
+import {CheckoutNavigator} from './checkout.navigator';
 
-const ProductStack = createStackNavigator();
+const CartStack = createStackNavigator();
 
 export const CartNavigator = () => {
   return (
-    <ProductStack.Navigator
+    <CartStack.Navigator
       screenOptions={{
-        ...TransitionPresets.ModalPresentationIOS,
         headerShown: false,
+        ...TransitionPresets.ModalPresentationIOS,
+        CardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
       }}>
-      <ProductStack.Screen name="CartScreen" component={CartScreen} />
-      <ProductStack.Screen
-        name="CheckoutScreen"
-        component={CheckoutScreen}
-        options={{
-          gestureEnabled: true,
-        }}
+      <CartStack.Screen name="CartScreen" component={CartScreen} />
+      <CartStack.Screen
+        name="Checkout"
+        component={CheckoutNavigator}
+        options={{gestureEnabled: false}}
       />
-    </ProductStack.Navigator>
+    </CartStack.Navigator>
   );
 };

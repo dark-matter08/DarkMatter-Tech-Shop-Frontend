@@ -4,7 +4,6 @@ import {Avatar, List} from 'react-native-paper';
 import {Icon, Text} from 'native-base';
 
 export const CartItem = ({item, qty}) => {
-  console.log(item);
   const data = item;
   const [quantity, setQuantity] = useState(qty);
 

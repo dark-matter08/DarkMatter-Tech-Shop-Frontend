@@ -26,7 +26,7 @@ const CartScreen = ({cartItems, clearCart, removeFromCart, navigation}) => {
     <>
       {cartItems.length ? (
         <View style={styles.container}>
-          <Text style={styles.header_text}>Cart</Text>
+          {/* <Text style={styles.header_text}>Cart</Text> */}
           <SwipeListView
             data={cartItems}
             renderItem={data => {
@@ -77,7 +77,7 @@ const CartScreen = ({cartItems, clearCart, removeFromCart, navigation}) => {
                   uri: 'https://cdn-icons-png.flaticon.com/512/2435/2435281.png',
                 }}
                 onPress={() => {
-                  null;
+                  navigation.navigate('Checkout');
                 }}>
                 Checkout
               </Button>
