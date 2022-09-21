@@ -5,8 +5,12 @@ import {theme} from '../theme';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {ProductsNavigator} from './product.navigator';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {VStack, Icon} from 'native-base';
+import {Icon} from 'native-base';
 import {AnimatedTabBarNavigator} from 'react-native-animated-nav-tab-bar';
+import {CartNavigator} from './cart.navigator';
+
+import CartIcon from '../../components/cartIcon/cart-icon.component';
+import {View} from 'react-native';
 
 const Tab = AnimatedTabBarNavigator();
 
@@ -20,8 +24,18 @@ const TAB_ICON = {
 const screenOptions = ({route}) => {
   let iconName = TAB_ICON[route.name];
   return {
-    tabBarIcon: ({color, size}) => {
-      return (
+    tabBarIcon: ({color, size, focused}) => {
+      return route.name === 'Cart' ? (
+        <View>
+          <CartIcon focused={focused} />
+          <Icon
+            size={size}
+            as={FontAwesomeIcon}
+            color={color}
+            icon={iconName}
+          />
+        </View>
+      ) : (
         <Icon size={size} as={FontAwesomeIcon} color={color} icon={iconName} />
       );
     },
@@ -36,8 +50,8 @@ export const AppNavigator = () => {
       screenOptions={screenOptions}
       activeColor={theme.colors.brand.secondary}
       tabBarOptions={{
-        activeTintColor: '#ffffff',
-        inactiveTintColor: '#222222',
+        activeTintColor: theme.colors.brand.tertiary,
+        inactiveTintColor: theme.colors.brand.muted,
         // activeBackgroundColor: theme.colors.brand.tertiary,
         tabStyle: {
           backgroundColor: theme.colors.brand.primary,
@@ -47,7 +61,7 @@ export const AppNavigator = () => {
       }}
       appearance={{floating: false}}>
       <Tab.Screen name="Home" component={ProductsNavigator} />
-      <Tab.Screen name="Cart" component={ProductsNavigator} />
+      <Tab.Screen name="Cart" component={CartNavigator} />
       <Tab.Screen name="Admin" component={ProductsNavigator} />
       <Tab.Screen name="Profile" component={ProductsNavigator} />
     </Tab.Navigator>

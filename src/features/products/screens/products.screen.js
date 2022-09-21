@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   ActivityIndicator,
   FlatList,
@@ -12,7 +11,7 @@ import {
 } from 'react-native';
 import {theme} from '../../../infrastructure/theme';
 import {ProductComponent} from '../components/product.component';
-import {VStack, Input, Icon} from 'native-base';
+import {VStack, Input, Text, Icon} from 'native-base';
 import * as All from '@fortawesome/free-solid-svg-icons';
 import {SearchedProducts} from '../components/searched-products.component';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';

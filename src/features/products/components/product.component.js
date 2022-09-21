@@ -7,7 +7,7 @@ import {
   Text,
 } from 'react-native';
 
-import {ProductCard} from './product-card.component';
+import ProductCard from './product-card.component';
 var {width} = Dimensions.get('window');
 
 export const ProductComponent = props => {

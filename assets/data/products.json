@@ -19,7 +19,7 @@
     "_id": {
       "$oid": "5f15d92ee520d44421ed8e9b"
     },
-    "image": "",
+    "image": "https://www.pngall.com/wp-content/uploads/12/Park-Bench-Transparent.png",
     "brand": "IKEA",
     "price": 350.9,
     "rating": 5,
@@ -36,7 +36,7 @@
     "_id": {
       "$oid": "5f15d964e520d44421ed8e9c"
     },
-    "image": "",
+    "image": "https://www.pngall.com/wp-content/uploads/9/Swimming-Pool-Vector.png",
     "brand": "OBI",
     "price": 1350.9,
     "rating": 5,
@@ -70,7 +70,7 @@
     "_id": {
       "$oid": "5f15da13e520d44421ed8e9e"
     },
-    "image": "https://lh3.googleusercontent.com/proxy/ZqRo12bOfeU7xg7mTMfgENdMop_Zl9srLYDKeFilLCZkych8UO4ldDlRzT-8q5scq35krZsqxprZA85RdGLEVvejnPY4RRfNZ1eXDUJRoqHHRWBB5iMCx7UxT4l6iA",
+    "image": "https://www.pngall.com/wp-content/uploads/2016/04/Sofa-Download-PNG.png",
     "brand": "Mobilix",
     "price": 1000,
     "rating": 5,

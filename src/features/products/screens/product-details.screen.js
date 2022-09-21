@@ -3,8 +3,10 @@ import {Image, View, StyleSheet, ScrollView} from 'react-native';
 import {Text} from 'native-base';
 import {Button} from 'react-native-paper';
 import {theme} from '../../../infrastructure/theme';
+import {connect} from 'react-redux';
+import * as actions from '../../../redux/actions/cart.actions';
 
-export const ProductDetailsScreen = ({route, navigation}) => {
+export const ProductDetailsScreen = ({route, navigation, addItemToCart}) => {
   const [item, setItem] = useState(route.params.item);
   const [availabiltity, setAvailability] = useState('');
 
@@ -37,6 +39,9 @@ export const ProductDetailsScreen = ({route, navigation}) => {
           style={styles.addButton}
           icon={{
             uri: 'https://cdn-icons-png.flaticon.com/512/3144/3144456.png',
+          }}
+          onPress={() => {
+            addItemToCart(item);
           }}>
           Add
         </Button>
@@ -46,14 +51,6 @@ export const ProductDetailsScreen = ({route, navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  addButton: {
-    marginTop: 'auto',
-    marginBottom: 'auto',
-    paddingTop: 'auto',
-    paddingBottom: 'auto',
-    backgroundColor: theme.colors.brand.primary,
-    height: 40,
-  },
   container: {
     position: 'absolute',
     height: '100%',
@@ -95,10 +92,31 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    height: 55,
   },
   price: {
-    fontSize: 24,
+    fontSize: 22,
     margin: 20,
     color: 'red',
+    marginTop: 'auto',
+    marginBottom: 'auto',
+  },
+  addButton: {
+    marginTop: 'auto',
+    marginBottom: 'auto',
+    paddingTop: 'auto',
+    paddingBottom: 'auto',
+    backgroundColor: theme.colors.brand.primary,
+    height: 40,
   },
 });
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addItemToCart: product => {
+      dispatch(actions.addToCart({quantity: 1, product}));
+    },
+  };
+};
+
+export default connect(null, mapDispatchToProps)(ProductDetailsScreen);

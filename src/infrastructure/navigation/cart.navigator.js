@@ -1,21 +1,21 @@
 import React from 'react';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
-import {ProductScreen} from '../../features/products/screens/products.screen';
-import ProductDetailsScreen from '../../features/products/screens/product-details.screen';
+import CartScreen from '../../features/cart/screen/cart.screen';
+import {CheckoutScreen} from '../../features/checkout/screens/checkout.screen';
 
 const ProductStack = createStackNavigator();
 
-export const ProductsNavigator = () => {
+export const CartNavigator = () => {
   return (
     <ProductStack.Navigator
       screenOptions={{
         ...TransitionPresets.ModalPresentationIOS,
         headerShown: false,
       }}>
-      <ProductStack.Screen name="Products" component={ProductScreen} />
+      <ProductStack.Screen name="CartScreen" component={CartScreen} />
       <ProductStack.Screen
-        name="Product Details"
-        component={ProductDetailsScreen}
+        name="CheckoutScreen"
+        component={CheckoutScreen}
         options={{
           gestureEnabled: true,
         }}

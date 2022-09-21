@@ -5,16 +5,16 @@ import {
   Dimensions,
   Text,
   Image,
-  Button,
   TouchableOpacity,
 } from 'react-native';
-// import {image}
-
+import {connect} from 'react-redux';
+import {Button} from 'react-native-paper';
 import {theme} from '../../../infrastructure/theme';
+import * as actions from '../../../redux/actions/cart.actions';
 
 var {width} = Dimensions.get('window');
 
-export const ProductCard = props => {
+const ProductCard = props => {
   const {item, navigation} = props;
   const {name, price, image, countInStock} = item;
 
@@ -40,13 +40,31 @@ export const ProductCard = props => {
       <Text style={styles.price}>${price}</Text>
       {countInStock > 0 ? (
         <View style={styles.stock}>
-          <Button title="Add" color={'green'} />
+          <Button
+            mode="contained"
+            style={styles.addButton}
+            icon={{
+              uri: 'https://cdn-icons-png.flaticon.com/512/3144/3144456.png',
+            }}
+            onPress={() => {
+              props.addItemToCart(item);
+            }}>
+            Add
+          </Button>
         </View>
       ) : (
         <Text style={{marginTop: 20}}>Currently Unavailable</Text>
       )}
     </TouchableOpacity>
   );
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addItemToCart: product => {
+      dispatch(actions.addToCart({quantity: 1, product}));
+    },
+  };
 };
 
 const styles = StyleSheet.create({
@@ -91,3 +109,5 @@ const styles = StyleSheet.create({
     marginBottom: 60,
   },
 });
+
+export default connect(null, mapDispatchToProps)(ProductCard);
