@@ -15,10 +15,15 @@ import {theme} from '../../../infrastructure/theme';
 var {width} = Dimensions.get('window');
 
 export const ProductCard = props => {
-  const {name, price, image, countInStock} = props;
+  const {item, navigation} = props;
+  const {name, price, image, countInStock} = item;
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => {
+        navigation.navigate('Product Details', {item: item});
+      }}>
       <Image
         style={styles.image}
         resizeMode="contain"

@@ -6,7 +6,7 @@ import {List, Avatar} from 'react-native-paper';
 var {width} = Dimensions.get('window');
 
 export const SearchedProducts = props => {
-  const {productsFiltered} = props;
+  const {productsFiltered, navigation} = props;
 
   return (
     <VStack w={width} space={3} style={{flex: 1}} alignSelf="center">
@@ -17,6 +17,9 @@ export const SearchedProducts = props => {
               key={item._id.$oid}
               title={item.name}
               description={item.description}
+              onPress={() => {
+                navigation.navigate('Product Details', {item: item});
+              }}
               left={props => (
                 <Avatar.Image
                   size={60}

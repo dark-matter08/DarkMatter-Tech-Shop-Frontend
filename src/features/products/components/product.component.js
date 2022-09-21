@@ -11,11 +11,11 @@ import {ProductCard} from './product-card.component';
 var {width} = Dimensions.get('window');
 
 export const ProductComponent = props => {
-  const {item} = props;
+  const {item, navigation} = props;
   return (
     <View style={styles.touchable}>
       <View style={styles.touchableView}>
-        <ProductCard {...item} />
+        <ProductCard item={item} navigation={navigation} />
       </View>
     </View>
   );

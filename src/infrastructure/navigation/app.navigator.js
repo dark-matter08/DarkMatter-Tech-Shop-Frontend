@@ -25,8 +25,6 @@ const screenOptions = ({route}) => {
         <Icon size={size} as={FontAwesomeIcon} color={color} icon={iconName} />
       );
     },
-    tabBarActiveTintColor: theme.colors.brand.primary,
-    tabBarInactiveTintColor: theme.colors.text_i.disabled,
     tabBarHideOnKeyboard: true,
     headerShown: false,
   };
@@ -37,7 +35,17 @@ export const AppNavigator = () => {
     <Tab.Navigator
       screenOptions={screenOptions}
       activeColor={theme.colors.brand.secondary}
-      barStyle={{backgroundColor: theme.colors.brand.primary}}>
+      tabBarOptions={{
+        activeTintColor: '#ffffff',
+        inactiveTintColor: '#222222',
+        // activeBackgroundColor: theme.colors.brand.tertiary,
+        tabStyle: {
+          backgroundColor: theme.colors.brand.primary,
+          // borderTopLeftRadius: 20,
+          // borderTopRightRadius: 20,
+        },
+      }}
+      appearance={{floating: false}}>
       <Tab.Screen name="Home" component={ProductsNavigator} />
       <Tab.Screen name="Cart" component={ProductsNavigator} />
       <Tab.Screen name="Admin" component={ProductsNavigator} />

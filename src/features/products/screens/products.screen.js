@@ -24,7 +24,7 @@ var {height} = Dimensions.get('window');
 const data = require('../../../../assets/data/products.json');
 const categories_data = require('../../../../assets/data/categories.json');
 
-export const ProductScreen = () => {
+export const ProductScreen = ({navigation}) => {
   const [products, setProducts] = useState([]);
   const [productsFiltered, setProductsFiltered] = useState([]);
   const [focus, setFocus] = useState();
@@ -113,7 +113,10 @@ export const ProductScreen = () => {
         </VStack>
       </View>
       {focus ? (
-        <SearchedProducts productsFiltered={productsFiltered} />
+        <SearchedProducts
+          productsFiltered={productsFiltered}
+          navigation={navigation}
+        />
       ) : (
         <View style={styles.container}>
           <Banner />
@@ -127,7 +130,13 @@ export const ProductScreen = () => {
           {productCat.length > 0 ? (
             <View style={styles.listContainer}>
               {productCat.map(item => {
-                return <ProductComponent key={item._id.$oid} item={item} />;
+                return (
+                  <ProductComponent
+                    key={item._id.$oid}
+                    navigation={navigation}
+                    item={item}
+                  />
+                );
               })}
             </View>
           ) : (
