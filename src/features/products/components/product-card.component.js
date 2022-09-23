@@ -24,15 +24,17 @@ const ProductCard = props => {
       onPress={() => {
         navigation.navigate('Product Details', {item: item});
       }}>
-      <Image
-        style={styles.image}
-        resizeMode="contain"
-        source={{
-          uri: image
-            ? image
-            : 'https://cdn.pixabay.com/photo/2012/04/01/17/29/box-23649_960_720.png',
-        }}
-      />
+      <View style={styles.image_container}>
+        <Image
+          style={styles.image}
+          resizeMode="contain"
+          source={{
+            uri: image
+              ? image
+              : 'https://cdn.pixabay.com/photo/2012/04/01/17/29/box-23649_960_720.png',
+          }}
+        />
+      </View>
       <View style={styles.card} />
       <Text style={styles.title}>
         {name.length > 15 ? name.substring(0, 15, -3) + '...' : name}
@@ -70,10 +72,10 @@ const mapDispatchToProps = dispatch => {
 const styles = StyleSheet.create({
   container: {
     width: width / 2 - 20,
-    height: width / 1.7,
+    height: width / 1.9,
     padding: 10,
     borderRadius: 10,
-    marginTop: 55,
+    marginTop: 75,
     marginBottom: 5,
     marginLeft: 8,
     elevation: 8,
@@ -81,15 +83,24 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.bg.primary,
   },
   image: {
-    width: width / 2 - 20 - 10,
-    height: width / 2 - 30 - 10,
+    width: width / 2 - 20 - 50,
+    height: width / 2 - 20 - 50,
     backgroundColor: 'transparent',
+    borderRadius: width / 2,
+  },
+  image_container: {
+    width: width / 2 - 20 - 40,
+    height: width / 2 - 20 - 40,
+    backgroundColor: theme.colors.brand.secondary,
     position: 'absolute',
-    top: -65,
+    top: -(width / 4 - 10 - 20),
+    borderRadius: width / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   card: {
     marginBottom: 10,
-    height: width / 2 - 20 - 90,
+    height: width / 4 - 10 - 25,
     backgroundColor: 'transparent',
     width: width / 2 - 20 - 10,
   },

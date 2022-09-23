@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,19 +9,21 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import {theme} from '../../../infrastructure/theme';
-import {ProductComponent} from '../components/product.component';
 import {VStack, Input, Text, Icon} from 'native-base';
 import * as All from '@fortawesome/free-solid-svg-icons';
-import {SearchedProducts} from '../components/searched-products.component';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import axios from 'axios';
+import {useFocusEffect} from '@react-navigation/native';
+
+import {theme} from '../../../infrastructure/theme';
+import {ProductComponent} from '../components/product.component';
+import {SearchedProducts} from '../components/searched-products.component';
 import {Banner} from '../../../components/banner/banner.component';
 import {CategoryFilter} from '../components/category-filter.component';
 
-var {height} = Dimensions.get('window');
+import baseURL from '../../../../assets/common/baseURL';
 
-const data = require('../../../../assets/data/products.json');
-const categories_data = require('../../../../assets/data/categories.json');
+var {height} = Dimensions.get('window');
 
 export const ProductScreen = ({navigation}) => {
   const [products, setProducts] = useState([]);
@@ -31,25 +33,44 @@ export const ProductScreen = ({navigation}) => {
   const [productCat, setProductCat] = useState([]);
   const [active, setActive] = useState();
   const [initialState, setInitialState] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setProducts(data);
-    setProductsFiltered(data);
-    setProductCat(data);
-    setFocus(false);
-    setCategories(categories_data);
-    setActive(-1);
-    setInitialState(data);
+  useFocusEffect(
+    useCallback(() => {
+      setFocus(false);
+      setActive(-1);
 
-    return () => {
-      setProducts([]);
-      setProductsFiltered([]);
-      setFocus();
-      setCategories([]);
-      setActive();
-      setInitialState([]);
-    };
-  }, []);
+      // products ===================
+
+      axios.get(`${baseURL}products`).then(res => {
+        setProducts(res.data);
+        setProductsFiltered(res.data);
+        setInitialState(res.data);
+        setProductCat(res.data);
+        setLoading(false);
+      });
+
+      // categories ===================
+
+      axios
+        .get(`${baseURL}categories`)
+        .then(res => {
+          setCategories(res.data);
+        })
+        .catch(err => {
+          console.log('Api call error: ', err);
+        });
+
+      return () => {
+        setProducts([]);
+        setProductsFiltered([]);
+        setFocus();
+        setCategories([]);
+        setActive();
+        setInitialState([]);
+      };
+    }, []),
+  );
 
   const searchProducts = text => {
     setProductsFiltered(
@@ -69,83 +90,95 @@ export const ProductScreen = ({navigation}) => {
     cat === 'all'
       ? [setProductCat(initialState), setActive(true)]
       : [
-          setProductCat(products.filter(i => i.category.$oid === cat)),
+          setProductCat(products.filter(i => i.category._id === cat)),
           setActive(true),
         ];
   };
 
   return (
-    <ScrollView>
-      <View style={styles.search}>
-        <VStack w="95%" space={5} alignSelf="center">
-          <Input
-            placeholder="Search"
-            variant="outline"
-            width="100%"
-            py="2"
-            px="3"
-            onFocus={openList}
-            onChangeText={text => searchProducts(text)}
-            InputLeftElement={
-              <Icon
-                m="2"
-                ml="3"
-                size="10"
-                as={FontAwesomeIcon}
-                icon={All.faSearch}
-              />
-            }
-            InputRightElement={
-              focus === true && (
-                <TouchableOpacity onPress={onBlur}>
+    <>
+      {!loading ? (
+        <ScrollView>
+          <View style={styles.search}>
+            <VStack w="95%" space={5} alignSelf="center">
+              <Input
+                placeholder="Search"
+                variant="outline"
+                width="100%"
+                py="2"
+                px="3"
+                onFocus={openList}
+                onChangeText={text => searchProducts(text)}
+                InputLeftElement={
                   <Icon
                     m="2"
-                    mr="3"
-                    size={25}
+                    ml="3"
+                    size="10"
                     as={FontAwesomeIcon}
-                    icon={All.faClose}
+                    icon={All.faSearch}
                   />
-                </TouchableOpacity>
-              )
-            }
-          />
-        </VStack>
-      </View>
-      {focus ? (
-        <SearchedProducts
-          productsFiltered={productsFiltered}
-          navigation={navigation}
-        />
-      ) : (
-        <View style={styles.container}>
-          <Banner />
-          <CategoryFilter
-            categories={categories}
-            categoryFilter={changeCategory}
-            productCat={productCat}
-            active={active}
-            setActive={setActive}
-          />
-          {productCat.length > 0 ? (
-            <View style={styles.listContainer}>
-              {productCat.map(item => {
-                return (
-                  <ProductComponent
-                    key={item._id.$oid}
-                    navigation={navigation}
-                    item={item}
-                  />
-                );
-              })}
-            </View>
+                }
+                InputRightElement={
+                  focus === true && (
+                    <TouchableOpacity onPress={onBlur}>
+                      <Icon
+                        m="2"
+                        mr="3"
+                        size={25}
+                        as={FontAwesomeIcon}
+                        icon={All.faClose}
+                      />
+                    </TouchableOpacity>
+                  )
+                }
+              />
+            </VStack>
+          </View>
+          {focus ? (
+            <SearchedProducts
+              productsFiltered={productsFiltered}
+              navigation={navigation}
+            />
           ) : (
-            <View style={[styles.center, {height: height / 2}]}>
-              <Text>No Products for this category</Text>
+            <View style={styles.container}>
+              <Banner />
+              <CategoryFilter
+                categories={categories}
+                categoryFilter={changeCategory}
+                productCat={productCat}
+                active={active}
+                setActive={setActive}
+              />
+              {productCat.length > 0 ? (
+                <View style={styles.listContainer}>
+                  {productCat.map(item => {
+                    return (
+                      <ProductComponent
+                        key={item._id}
+                        navigation={navigation}
+                        item={item}
+                      />
+                    );
+                  })}
+                </View>
+              ) : (
+                <View style={[styles.center, {height: height / 2}]}>
+                  <Text>No Products for this category</Text>
+                </View>
+              )}
             </View>
           )}
+        </ScrollView>
+      ) : (
+        <View
+          style={[styles.center, {backgroundColor: '#f2f2f2', height: '100%'}]}>
+          <ActivityIndicator
+            size={'large'}
+            color={theme.colors.brand.primary}
+          />
         </View>
       )}
-    </ScrollView>
+    </>
   );
 };
 
@@ -160,13 +193,12 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     backgroundColor: 'gainsboro',
-    minHeight: height,
-    maxHeight: height + 120,
+    height: 'auto',
     flex: 1,
     flexWrap: 'wrap',
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: 20,
+    marginVertical: 20,
   },
   search: {
     backgroundColor: 'white',

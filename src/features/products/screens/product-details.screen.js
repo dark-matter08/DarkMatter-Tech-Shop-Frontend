@@ -74,6 +74,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   contentHeader: {
+    height: 30,
+    paddingTop: 6,
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
@@ -96,6 +98,8 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 22,
+    height: 25,
+    paddingTop: 3,
     margin: 20,
     color: 'red',
     marginTop: 'auto',

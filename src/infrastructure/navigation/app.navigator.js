@@ -1,16 +1,19 @@
 import React from 'react';
 import * as All from '@fortawesome/free-solid-svg-icons';
 
-import {theme} from '../theme';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {ProductsNavigator} from './product.navigator';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {Icon} from 'native-base';
 import {AnimatedTabBarNavigator} from 'react-native-animated-nav-tab-bar';
-import {CartNavigator} from './cart.navigator';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
-import CartIcon from '../../components/cartIcon/cart-icon.component';
+import {Icon} from 'native-base';
 import {View} from 'react-native';
+
+import {theme} from '../theme';
+import CartIcon from '../../components/cartIcon/cart-icon.component';
+
+import {ProductsNavigator} from './product.navigator';
+import {CartNavigator} from './cart.navigator';
+import {AccountNavigator} from './account.navigator';
 
 const Tab = AnimatedTabBarNavigator();
 
@@ -63,7 +66,7 @@ export const AppNavigator = () => {
       <Tab.Screen name="Home" component={ProductsNavigator} />
       <Tab.Screen name="Cart" component={CartNavigator} />
       <Tab.Screen name="Admin" component={ProductsNavigator} />
-      <Tab.Screen name="Profile" component={ProductsNavigator} />
+      <Tab.Screen name="Profile" component={AccountNavigator} />
     </Tab.Navigator>
   );
 };
