@@ -1,5 +1,5 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 
 import {RegisterScreen} from '../../features/account/screens/register.screen';
 import {LoginScreen} from '../../features/account/screens/login.screen';
@@ -12,6 +12,7 @@ export const AccountNavigator = () => {
     <AccountStack.Navigator
       screenOptions={{
         headerShown: false,
+        ...TransitionPresets.SlideFromRightIOS,
       }}>
       <AccountStack.Screen
         name="Login"
