@@ -7,22 +7,12 @@ var {width} = Dimensions.get('window');
 export const Banner = () => {
   const [bannerData, setBannerData] = useState([]);
   useEffect(() => {
-    // setBannerData([
-    //   {
-    //     uri: 'https://www.yardproduct.com/blog/wp-content/uploads/2016/01/gardening-banner.jpg',
-    //   },
-    //   {
-    //     uri: 'https://www.yardproduct.com/blog/wp-content/uploads/2016/01/gardening-banner.jpg',
-    //   },
-    //   {
-    //     uri: 'https://images.vexels.com/media/users/3/126443/preview2/ff9af1e1edfa2c4a46c43b0c2040ce52-macbook-pro-touch-bar-banner.jpg',
-    //   },
-    // ]);
-
     setBannerData([
       require('../../../assets/slider/slider1.jpeg'),
       require('../../../assets/slider/slider2.jpeg'),
       require('../../../assets/slider/slider3.jpeg'),
+      require('../../../assets/slider/slider4.jpeg'),
+      require('../../../assets/slider/slider5.jpeg'),
     ]);
 
     return () => {
@@ -35,7 +25,6 @@ export const Banner = () => {
       <View style={styles.swipper}>
         <View style={{height: 10}} />
         <Swiper
-          style={{height: width / 2}}
           showButtons={false}
           autoplay={true}
           autoplayTimeout={2}
@@ -60,7 +49,7 @@ export const Banner = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'gainsboro',
-    height: width / 2 + 20,
+    height: width / 2 - 20,
   },
   swiper: {
     width: width,
@@ -68,7 +57,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   image: {
-    height: width / 2,
+    height: width / 2 - 40,
     width: width - 40,
     borderRadius: 10,
     marginHorizontal: 20,

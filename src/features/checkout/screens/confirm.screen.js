@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import {Text} from 'native-base';
 import {connect} from 'react-redux';
-import * as actions from '../../../redux/actions/cart.actions';
+import * as actions from '../../../redux/actions/cart.action';
 import {Avatar, Button, List} from 'react-native-paper';
 // import {  } from 'react-native-gesture-handler';
 

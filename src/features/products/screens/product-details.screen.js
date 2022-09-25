@@ -4,7 +4,7 @@ import {Text} from 'native-base';
 import {Button} from 'react-native-paper';
 import {theme} from '../../../infrastructure/theme';
 import {connect} from 'react-redux';
-import * as actions from '../../../redux/actions/cart.actions';
+import * as actions from '../../../redux/actions/cart.action';
 import Toast from 'react-native-toast-message';
 
 export const ProductDetailsScreen = ({route, navigation, addItemToCart}) => {

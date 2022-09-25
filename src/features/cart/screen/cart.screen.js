@@ -7,7 +7,7 @@ import {SvgXml} from 'react-native-svg';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
-import * as actions from '../../../redux/actions/cart.actions';
+import * as actions from '../../../redux/actions/cart.action';
 import {theme} from '../../../infrastructure/theme';
 import empty_cart from '../../../../assets/svg/empty_cart';
 import {FadeInView} from '../../../components/animations/fade.animation';
