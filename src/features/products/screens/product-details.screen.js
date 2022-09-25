@@ -5,6 +5,7 @@ import {Button} from 'react-native-paper';
 import {theme} from '../../../infrastructure/theme';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions/cart.actions';
+import Toast from 'react-native-toast-message';
 
 export const ProductDetailsScreen = ({route, navigation, addItemToCart}) => {
   const [item, setItem] = useState(route.params.item);
@@ -42,6 +43,12 @@ export const ProductDetailsScreen = ({route, navigation, addItemToCart}) => {
           }}
           onPress={() => {
             addItemToCart(item);
+            Toast.show({
+              topOffset: 60,
+              type: 'success',
+              text1: `${item.name} added to cart`,
+              text2: 'Go to cart to complete order',
+            });
           }}>
           Add
         </Button>

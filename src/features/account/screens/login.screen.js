@@ -41,7 +41,7 @@ export const LoginScreen = ({navigation}) => {
         id={'password'}
         secureTextEntry={true}
         value={password}
-        onChangeText={password => setPassword(password)}
+        onChangeText={pass => setPassword(pass)}
       />
       {error && <Error message={error} />}
       <View style={styles.buttonGroup}>

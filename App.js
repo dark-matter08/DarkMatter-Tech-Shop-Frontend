@@ -1,5 +1,6 @@
 import React from 'react';
 import {Navigation} from './src/infrastructure/navigation';
+import Toast from 'react-native-toast-message';
 
 import {NativeBaseProvider} from 'native-base';
 
@@ -15,6 +16,7 @@ const App = () => {
     <Provider store={store}>
       <NativeBaseProvider>
         <Navigation />
+        <Toast />
       </NativeBaseProvider>
     </Provider>
 
