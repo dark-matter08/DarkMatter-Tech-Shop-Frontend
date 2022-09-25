@@ -13,12 +13,14 @@ export const AdminNavigator = () => {
     <AdminStack.Navigator
       screenOptions={{
         // headerShown: false,
+        headerMode: 'float',
         ...TransitionPresets.SlideFromRightIOS,
       }}>
       <AdminStack.Screen
         name="Products"
         component={ProductsScreen}
         options={{
+          headerTitleAlign: 'center',
           gestureEnabled: true,
         }}
       />

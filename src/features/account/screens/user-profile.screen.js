@@ -30,7 +30,8 @@ export const UserProfileScreen = ({navigation}) => {
           .get(`${baseURL}users/${context.stateUser.user.userId}`, {
             headers: {Authorization: `Bearer ${token}`},
           })
-          .then(user => setUserProfile(user.data));
+          .then(user => setUserProfile(user.data))
+          .catch(err => console.log(err));
       })
       .catch(error => {
         console.log(error);

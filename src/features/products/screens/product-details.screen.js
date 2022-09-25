@@ -6,10 +6,22 @@ import {theme} from '../../../infrastructure/theme';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions/cart.action';
 import Toast from 'react-native-toast-message';
+import {TraficLight} from '../../../components/trafic-light/trafic-light.component';
 
 export const ProductDetailsScreen = ({route, navigation, addItemToCart}) => {
   const [item, setItem] = useState(route.params.item);
-  const [availabiltity, setAvailability] = useState('');
+  const [availabiltity, setAvailability] = useState(null);
+  const [availabiltityText, setAvailabilityText] = useState('');
+
+  useEffect(() => {
+    if (item.countInStock === 0) {
+      setAvailabilityText('Unavailable');
+    } else if (item.countInStock <= 5) {
+      setAvailabilityText('Limited Stock');
+    } else {
+      setAvailabilityText('Available');
+    }
+  }, [item.countInStock]);
 
   return (
     <View style={styles.container}>
@@ -30,7 +42,15 @@ export const ProductDetailsScreen = ({route, navigation, addItemToCart}) => {
             <Text style={styles.contentHeader}>{item.name}</Text>
             <Text style={styles.contentText}>{item.brand}</Text>
           </View>
-          {/* TODO: Description , Rich Description and Availability */}
+          <View style={styles.availabiltityContainer}>
+            <View style={styles.availabiltity}>
+              <Text style={styles.availabiltityText}>
+                Availability: {availabiltityText}
+              </Text>
+              <TraficLight availability={availabiltityText} />
+            </View>
+            <Text>{item.description}</Text>
+          </View>
         </ScrollView>
       </View>
       <View style={styles.bottomContainer}>
@@ -119,6 +139,18 @@ const styles = StyleSheet.create({
     paddingBottom: 'auto',
     backgroundColor: theme.colors.brand.primary,
     height: 40,
+  },
+  availabiltityContainer: {
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  availabiltity: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  availabiltityText: {
+    fontWeight: 'bold',
+    marginRight: 10,
   },
 });
 

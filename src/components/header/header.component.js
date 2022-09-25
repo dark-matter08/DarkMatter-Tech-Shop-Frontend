@@ -7,7 +7,7 @@ export const Header = props => {
       <Image
         source={require('../../../assets/images/logo.png')}
         resizeMode="contain"
-        style={{height: 60}}
+        style={{height: 45}}
       />
     </SafeAreaView>
   );
