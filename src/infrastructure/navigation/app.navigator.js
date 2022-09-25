@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import * as All from '@fortawesome/free-solid-svg-icons';
 
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+// import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AnimatedTabBarNavigator} from 'react-native-animated-nav-tab-bar';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
@@ -14,13 +14,15 @@ import CartIcon from '../../components/cartIcon/cart-icon.component';
 import {ProductsNavigator} from './product.navigator';
 import {CartNavigator} from './cart.navigator';
 import {AccountNavigator} from './account.navigator';
+import {AdminNavigator} from './admin.navigator';
+import AuthContext from '../../context/store/auth.global';
 
 const Tab = AnimatedTabBarNavigator();
 
 const TAB_ICON = {
   Home: All.faHome,
   Cart: All.faShoppingCart,
-  Admin: All.faGear,
+  Admin: All.faDashboard,
   Profile: All.faUser,
 };
 
@@ -48,6 +50,7 @@ const screenOptions = ({route}) => {
 };
 
 export const AppNavigator = () => {
+  const context = useContext(AuthContext);
   return (
     <Tab.Navigator
       screenOptions={screenOptions}
@@ -65,7 +68,9 @@ export const AppNavigator = () => {
       appearance={{floating: false}}>
       <Tab.Screen name="Home" component={ProductsNavigator} />
       <Tab.Screen name="Cart" component={CartNavigator} />
-      <Tab.Screen name="Admin" component={ProductsNavigator} />
+      {context.stateUser.user.isAdmin === true && (
+        <Tab.Screen name="Admin" component={AdminNavigator} />
+      )}
       <Tab.Screen name="Profile" component={AccountNavigator} />
     </Tab.Navigator>
   );

@@ -6,7 +6,6 @@ import baseURL from '../../../assets/common/baseURL';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 
 export const loginUser = (user, dispatch) => {
-  console.log(user);
   fetch(`${baseURL}users/login`, {
     method: 'POST',
     body: JSON.stringify(user),
@@ -17,8 +16,13 @@ export const loginUser = (user, dispatch) => {
   })
     .then(res => res.json())
     .then(data => {
-      console.log(data);
       if (data) {
+        Toast.show({
+          topOffset: 60,
+          type: 'success',
+          text1: 'Successfull!!!',
+          text2: 'Loging in',
+        });
         const token = data.token;
         const decoded = jwt_decode(token);
         AsyncStorage.setItem('jwt', token);
@@ -28,7 +32,6 @@ export const loginUser = (user, dispatch) => {
       }
     })
     .catch(err => {
-      console.log(err);
       Toast.show({
         topOffset: 60,
         type: 'error',
