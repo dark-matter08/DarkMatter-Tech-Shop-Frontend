@@ -33,15 +33,10 @@ const screenOptions = ({route}) => {
       return route.name === 'Cart' ? (
         <View>
           <CartIcon focused={focused} />
-          <Icon
-            size={size}
-            as={FontAwesomeIcon}
-            color={color}
-            icon={iconName}
-          />
+          <FontAwesomeIcon size={size} color={color} icon={iconName} />
         </View>
       ) : (
-        <Icon size={size} as={FontAwesomeIcon} color={color} icon={iconName} />
+        <FontAwesomeIcon size={size} color={color} icon={iconName} />
       );
     },
     tabBarHideOnKeyboard: true,
@@ -68,9 +63,10 @@ export const AppNavigator = () => {
       appearance={{floating: false}}>
       <Tab.Screen name="Home" component={ProductsNavigator} />
       <Tab.Screen name="Cart" component={CartNavigator} />
-      {context.stateUser.user.isAdmin === true && (
+      <Tab.Screen name="Admin" component={AdminNavigator} />
+      {/* {context.stateUser.user.isAdmin === true && (
         <Tab.Screen name="Admin" component={AdminNavigator} />
-      )}
+      )} */}
       <Tab.Screen name="Profile" component={AccountNavigator} />
     </Tab.Navigator>
   );

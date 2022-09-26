@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     width: width / 3.4,
   },
   productsButton: {
-    backgroundColor: theme.colors.brand.muted,
+    backgroundColor: '#FFCF64',
     width: width / 3.4,
     marginHorizontal: width - (width / 3.4) * 3 - 25,
   },

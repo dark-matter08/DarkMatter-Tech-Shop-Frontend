@@ -54,7 +54,7 @@ const ItemModal = ({
               uri: 'https://cdn-icons-png.flaticon.com/512/1159/1159633.png',
             }}
             onPress={() => {
-              navigation.navigate('ProductForm');
+              navigation.navigate('ProductForm', {item: item});
               setShowModal(false);
             }}>
             Edit

@@ -1,9 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import {
   View,
   Image,
+  Linking,
   StyleSheet,
   TouchableOpacity,
+  PermissionsAndroid,
   Platform,
 } from 'react-native';
 import {Text, Button} from 'react-native-paper';
@@ -11,18 +13,24 @@ import {Select, Icon} from 'native-base';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faArrowAltCircleDown} from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowAltCircleDown,
+  faCamera,
+} from '@fortawesome/free-solid-svg-icons';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 
 import {FormContainer} from '../../../components/form/form-container.component';
 import {Input} from '../../../components/form/input.component';
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
 import {Error} from '../../../components/error/error.component';
+import {theme} from '../../../infrastructure/theme';
 
 import baseURL from '../../../../assets/common/baseURL';
 import axios from 'axios';
-import {theme} from '../../../infrastructure/theme';
+import mime from 'mime';
 
-export const ProductFormScreen = () => {
+export const ProductFormScreen = ({route, navigation}) => {
   const [pickerValue, setPickerValue] = useState('');
   const [brand, setBrand] = useState('');
   const [name, setName] = useState('');
@@ -30,11 +38,11 @@ export const ProductFormScreen = () => {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState('');
   const [category, setCategory] = useState('');
-  const [countInStock, setCountInStock] = useState();
-  const [rating, setRating] = useState();
+  const [countInStock, setCountInStock] = useState(0);
+  const [rating, setRating] = useState(0);
   const [isFeatured, setIsFeatured] = useState(false);
   const [numReviews, setNumReviews] = useState(0);
-  const [richDescription, setRichDescription] = useState();
+  const [richDescription, setRichDescription] = useState('');
 
   const [mainImage, setMainImage] = useState('');
   const [categories, setCategories] = useState([]);
@@ -42,12 +50,39 @@ export const ProductFormScreen = () => {
   const [item, setItem] = useState(null);
   const [error, setError] = useState();
 
+  const [cameraMode, setCameraMode] = useState('front');
+  const [cameraPermission, setCameraPermission] = useState();
+  const cameraRef = useRef();
+
   const [formTitle, setFormTitle] = useState('Add Product');
 
   useEffect(() => {
+    if (!route.params) {
+      setItem(null);
+    } else {
+      setItem(route.params.item);
+      setBrand(route.params.item.brand);
+      setName(route.params.item.name);
+      setPrice(route.params.item.price.toString());
+      setDescription(route.params.item.description);
+      setMainImage(route.params.item.image);
+      setImage(route.params.item.image);
+      setCategory(route.params.item.category.id);
+      setCountInStock(route.params.item.countInStock.toString());
+    }
+
     if (item) {
       setFormTitle('Edit Product');
     }
+
+    // Image Picker
+    AsyncStorage.getItem('jwt')
+      .then(res => {
+        setToken(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
 
     axios
       .get(`${baseURL}categories`)
@@ -58,7 +93,126 @@ export const ProductFormScreen = () => {
       setFormTitle('Add Product');
       setCategories([]);
     };
-  }, [item]);
+  }, [item, route.params]);
+
+  async function hasAndroidPermission() {
+    const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+
+    const hasPermission = await PermissionsAndroid.check(permission);
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(permission);
+    return status === 'granted';
+  }
+
+  const pickImage = async () => {
+    let result = await launchImageLibrary({
+      mediaType: 'mixed',
+      quality: 1,
+    });
+
+    if (!result.didCancel) {
+      setMainImage(result.assets[0].uri);
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const addProduct = () => {
+    if (
+      name === '' ||
+      brand === '' ||
+      price === '' ||
+      description === '' ||
+      category === '' ||
+      countInStock === ''
+    ) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    setError('');
+
+    let formData = new FormData();
+
+    const newImageURI = 'file:///' + image.split('file:/').join('');
+
+    formData.append('image', {
+      uri: newImageURI,
+      type: mime.getType(newImageURI),
+      name: newImageURI.split('/').pop(),
+    });
+    formData.append('name', name);
+    formData.append('brand', brand);
+    formData.append('price', price);
+    formData.append('description', description);
+    formData.append('category', category);
+    formData.append('countInStock', countInStock);
+    formData.append('richDescription', richDescription);
+    formData.append('rating', rating);
+    formData.append('numReviews', numReviews);
+    formData.append('isFeatured', isFeatured);
+
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    if (item !== null) {
+      axios
+        .put(`${baseURL}products/${item.id}`, formData, config)
+        .then(res => {
+          if (res.status === 200 || res.status === 201) {
+            Toast.show({
+              topOffset: 60,
+              type: 'success',
+              text1: 'Product successfully Updated',
+              text2: '',
+            });
+            setTimeout(() => {
+              navigation.navigate('Products');
+            }, 500);
+          }
+        })
+        .catch(err => {
+          Toast.show({
+            topOffset: 60,
+            type: 'error',
+            text1: 'Something went wrong with the request',
+            text2: 'Please try again later',
+          });
+          console.log(err);
+        });
+    } else {
+      axios
+        .post(`${baseURL}products`, formData, config)
+        .then(res => {
+          if (res.status === 200 || res.status === 201) {
+            Toast.show({
+              topOffset: 60,
+              type: 'success',
+              text1: 'New Product Added',
+              text2: '',
+            });
+            setTimeout(() => {
+              navigation.navigate('Products');
+            }, 500);
+          }
+        })
+        .catch(err => {
+          Toast.show({
+            topOffset: 60,
+            type: 'error',
+            text1: 'Something went wrong with the request',
+            text2: 'Please try again later',
+          });
+          console.log(err);
+        });
+    }
+  };
 
   return (
     <KeyboardAwareScrollView
@@ -67,13 +221,21 @@ export const ProductFormScreen = () => {
       enableOnAndroid={true}>
       <FormContainer title={formTitle}>
         <View style={styles.imageContainer}>
-          {/* <Image style={styles.image} source={{uri: mainImage}} /> */}
-          <Button
-            icon={{
-              uri: 'https://cdn-icons-png.flaticon.com/512/4442/4442531.png',
+          <Image
+            style={styles.image}
+            source={{
+              uri: mainImage
+                ? mainImage
+                : 'https://cdn-icons-png.flaticon.com/512/3249/3249934.png',
             }}
-            style={styles.imagePicker}
           />
+          <TouchableOpacity onPress={pickImage} style={styles.imagePicker}>
+            <FontAwesomeIcon
+              size={24}
+              color={theme.colors.brand.primary}
+              icon={faCamera}
+            />
+          </TouchableOpacity>
         </View>
         <View style={styles.inputContainer}>
           <View style={styles.label}>
@@ -162,15 +324,16 @@ export const ProductFormScreen = () => {
                 setCategory(e);
               }}>
               {categories.map(c => {
-                return <Select.Item key={c.id} label={c.name} value={c.name} />;
+                return <Select.Item key={c.id} label={c.name} value={c.id} />;
               })}
             </Select>
           </View>
         </View>
-        {error && <Error message={'error'} />}
+        {error && <Error message={error} />}
         <View style={styles.buttonsContainer}>
           <Button
             mode="contained"
+            onPress={addProduct}
             style={styles.confirmButton}
             icon={{
               uri: 'https://cdn-icons-png.flaticon.com/512/4442/4442531.png',
@@ -218,27 +381,30 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   imageContainer: {
-    width: 200,
-    height: 200,
-    borderStyle: 'solid',
-    borderWidth: 8,
+    width: 208,
+    height: 208,
     justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 100,
-    borderBottomColor: theme.colors.brand.muted,
     elevation: 10,
+    backgroundColor: theme.colors.brand.secondary,
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: '94%',
+    height: '94%',
     borderRadius: 100,
   },
   imagePicker: {
     position: 'absolute',
-    right: 5,
-    bottom: 5,
-    backgroundColor: 'grey',
+    right: 7,
+    bottom: 7,
+    backgroundColor: 'gainsboro',
     padding: 8,
     borderRadius: 100,
     elevation: 20,
+    height: 50,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
