@@ -18,60 +18,78 @@ import Toast from 'react-native-toast-message';
 
 var {width} = Dimensions.get('window');
 
-export const ListItem = ({item, navigation, index}) => {
+const ItemModal = ({
+  showModal,
+  setShowModal,
+  navigation,
+  deleteProduct,
+  item,
+}) => {
+  return (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={showModal}
+      onRequestClose={() => {
+        setShowModal(!showModal);
+      }}>
+      <View style={styles.centerView}>
+        <View style={styles.modalView}>
+          <TouchableOpacity
+            underlayColor="#e8e8e8"
+            onPress={() => setShowModal(false)}
+            style={styles.modalClose}>
+            <Icon
+              m="2"
+              ml="3"
+              size="20"
+              as={FontAwesomeIcon}
+              icon={All.faClose}
+            />
+          </TouchableOpacity>
+          <Button
+            mode="contained"
+            style={styles.editButton}
+            icon={{
+              uri: 'https://cdn-icons-png.flaticon.com/512/1159/1159633.png',
+            }}
+            onPress={() => {
+              navigation.navigate('ProductForm');
+              setShowModal(false);
+            }}>
+            Edit
+          </Button>
+          <View style={{height: 10}} />
+          <Button
+            mode="contained"
+            style={styles.deleteButton}
+            icon={{
+              uri: 'https://cdn-icons-png.flaticon.com/512/3096/3096673.png',
+            }}
+            onPress={() => {
+              deleteProduct(item.id);
+              setShowModal(false);
+            }}>
+            Delete
+          </Button>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+export const ListItem = ({item, navigation, index, deleteProduct}) => {
   const [showModal, setShowModal] = useState(false);
 
-  const deleteItem = () => {
-    return null;
-  };
   return (
     <View>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={showModal}
-        onRequestClose={() => {
-          setShowModal(!showModal);
-        }}>
-        <View style={styles.centerView}>
-          <View style={styles.modalView}>
-            <TouchableOpacity
-              underlayColor="#e8e8e8"
-              onPress={() => setShowModal(!showModal)}
-              style={styles.modalClose}>
-              <Icon
-                m="2"
-                ml="3"
-                size="20"
-                as={FontAwesomeIcon}
-                icon={All.faClose}
-              />
-            </TouchableOpacity>
-            <Button
-              mode="contained"
-              style={styles.editButton}
-              icon={{
-                uri: 'https://cdn-icons-png.flaticon.com/512/1159/1159633.png',
-              }}
-              onPress={() => {
-                navigation.navigate('ProductForm');
-                setShowModal(!showModal);
-              }}>
-              Edit
-            </Button>
-            <View style={{height: 10}} />
-            <Button
-              mode="contained"
-              style={styles.deleteButton}
-              icon={{
-                uri: 'https://cdn-icons-png.flaticon.com/512/3096/3096673.png',
-              }}
-              onPress={deleteItem}>
-              Delete
-            </Button>
-          </View>
-        </View>
-      </Modal>
+      <ItemModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        navigation={navigation}
+        deleteProduct={deleteProduct}
+        item={item}
+      />
       <TouchableOpacity
         style={[
           styles.container,
@@ -84,7 +102,7 @@ export const ListItem = ({item, navigation, index}) => {
           navigation.navigate('Product Details', {item: item});
         }}
         onLongPress={() => {
-          setShowModal(!showModal);
+          setShowModal(true);
         }}>
         <Image
           style={styles.image}

@@ -4,11 +4,11 @@ import {Select, Icon} from 'native-base';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {connect} from 'react-redux';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {faArrowAltCircleDown} from '@fortawesome/free-solid-svg-icons';
 
 import {FormContainer} from '../../../components/form/form-container.component';
 import {Input} from '../../../components/form/input.component';
 import {Button} from 'react-native-paper';
-import {faArrowAltCircleDown} from '@fortawesome/free-solid-svg-icons';
 import {theme} from '../../../infrastructure/theme';
 
 const countries = require('../../../../assets/data/countries.json');

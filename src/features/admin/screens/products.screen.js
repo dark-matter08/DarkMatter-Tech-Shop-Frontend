@@ -64,30 +64,16 @@ export const ProductsScreen = ({navigation}) => {
         setLoading(false);
       });
 
-      // categories ===================
-      // axios
-      //   .get(`${baseURL}categories`)
-      //   .then(res => {
-      //     setCategories(res.data);
-      //   })
-      //   .catch(err => {
-      //     console.log('Api call error: ', err);
-      //   });
-
       return () => {
         setProductList([]);
         setProductFilter([]);
         setLoading(true);
-        // setFocus();
-        // setCategories([]);
-        // setActive();
-        // setInitialState([]);
       };
     }, []),
   );
 
   const searchProducts = text => {
-    if (text == '') {
+    if (text === '') {
       setProductFilter(productList);
     } else {
       setProductFilter(
@@ -98,8 +84,58 @@ export const ProductsScreen = ({navigation}) => {
     }
   };
 
+  const deleteProducts = id => {
+    axios
+      .delete(`${baseURL}products/${id}`, {
+        headers: {Authorization: `Bearer ${token}`},
+      })
+      .then(res => {
+        console.log(res);
+        const new_products = productFilter.filter(item => item.id !== id);
+        setProductFilter(new_products);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   return (
-    <View>
+    <View style={styles.container}>
+      <View style={styles.buttonsContainer}>
+        <Button
+          mode="contained"
+          style={styles.ordersButton}
+          icon={{
+            uri: 'https://cdn-icons-png.flaticon.com/512/6948/6948578.png',
+          }}
+          onPress={() => {
+            navigation.navigate('Orders');
+          }}>
+          Orders
+        </Button>
+        <Button
+          mode="contained"
+          style={styles.productsButton}
+          icon={{
+            uri: 'https://cdn-icons-png.flaticon.com/512/4442/4442531.png',
+          }}
+          onPress={() => {
+            navigation.navigate('ProductForm');
+          }}>
+          Products
+        </Button>
+        <Button
+          mode="contained"
+          style={styles.categoriesButton}
+          icon={{
+            uri: 'https://cdn-icons-png.flaticon.com/512/1077/1077340.png',
+          }}
+          onPress={() => {
+            navigation.navigate('Categories');
+          }}>
+          Categories
+        </Button>
+      </View>
       <View style={styles.search}>
         <VStack w="95%" space={5} alignSelf="center">
           <Input
@@ -147,7 +183,12 @@ export const ProductsScreen = ({navigation}) => {
           ListHeaderComponent={ListHeader}
           renderItem={({item, index}) => {
             return (
-              <ListItem item={item} navigation={navigation} index={index} />
+              <ListItem
+                item={item}
+                navigation={navigation}
+                index={index}
+                deleteProduct={deleteProducts}
+              />
             );
           }}
           keyExtractor={item => item.id}
@@ -178,5 +219,28 @@ const styles = StyleSheet.create({
   headerItem: {
     margin: 3,
     width: width / 6,
+  },
+  ordersButton: {
+    backgroundColor: theme.colors.brand.primary,
+    width: width / 3.4,
+  },
+  productsButton: {
+    backgroundColor: theme.colors.brand.muted,
+    width: width / 3.4,
+    marginHorizontal: width - (width / 3.4) * 3 - 25,
+  },
+  categoriesButton: {
+    backgroundColor: theme.colors.brand.secondary,
+    width: width / 3.4,
+  },
+  container: {
+    marginBottom: 160,
+    backgroundColor: 'white',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    margin: 20,
+    alignSelf: 'center',
+    justifyContent: 'space-evenly',
   },
 });
