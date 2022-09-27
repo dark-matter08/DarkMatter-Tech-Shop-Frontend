@@ -5,7 +5,7 @@ import baseURL from '../../../assets/common/baseURL';
 
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 
-export const loginUser = (user, dispatch) => {
+export const loginUser = (user, dispatch, setLoading) => {
   fetch(`${baseURL}users/login`, {
     method: 'POST',
     body: JSON.stringify(user),
@@ -27,8 +27,10 @@ export const loginUser = (user, dispatch) => {
         const decoded = jwt_decode(token);
         AsyncStorage.setItem('jwt', token);
         dispatch(setCurrentUser(decoded, user));
+        setLoading(false);
       } else {
         logoutUser(dispatch);
+        setLoading(false);
       }
     })
     .catch(err => {
@@ -39,6 +41,7 @@ export const loginUser = (user, dispatch) => {
         text2: err,
       });
       logoutUser(dispatch);
+      setLoading(false);
     });
 };
 

@@ -28,6 +28,7 @@ export const AdminNavigator = () => {
         name="Categories"
         component={CategoriesScreen}
         options={{
+          headerTitleAlign: 'center',
           gestureEnabled: true,
         }}
       />
@@ -35,6 +36,7 @@ export const AdminNavigator = () => {
         name="Orders"
         component={OrdersScreen}
         options={{
+          headerTitleAlign: 'center',
           gestureEnabled: true,
         }}
       />
@@ -42,6 +44,7 @@ export const AdminNavigator = () => {
         name="ProductForm"
         component={ProductFormScreen}
         options={{
+          headerTitleAlign: 'center',
           gestureEnabled: true,
         }}
       />

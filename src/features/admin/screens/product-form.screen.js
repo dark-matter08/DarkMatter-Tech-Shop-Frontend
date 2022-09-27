@@ -25,6 +25,7 @@ import {Input} from '../../../components/form/input.component';
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
 import {Error} from '../../../components/error/error.component';
 import {theme} from '../../../infrastructure/theme';
+import {Button as CustomButton} from '../../../components/button/button.component';
 
 import baseURL from '../../../../assets/common/baseURL';
 import axios from 'axios';
@@ -49,6 +50,7 @@ export const ProductFormScreen = ({route, navigation}) => {
   const [token, setToken] = useState();
   const [item, setItem] = useState(null);
   const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
 
   const [cameraMode, setCameraMode] = useState('front');
   const [cameraPermission, setCameraPermission] = useState();
@@ -75,7 +77,7 @@ export const ProductFormScreen = ({route, navigation}) => {
       setFormTitle('Edit Product');
     }
 
-    // Image Picker
+    // get jwt token
     AsyncStorage.getItem('jwt')
       .then(res => {
         setToken(res);
@@ -95,18 +97,6 @@ export const ProductFormScreen = ({route, navigation}) => {
     };
   }, [item, route.params]);
 
-  async function hasAndroidPermission() {
-    const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
-
-    const hasPermission = await PermissionsAndroid.check(permission);
-    if (hasPermission) {
-      return true;
-    }
-
-    const status = await PermissionsAndroid.request(permission);
-    return status === 'granted';
-  }
-
   const pickImage = async () => {
     let result = await launchImageLibrary({
       mediaType: 'mixed',
@@ -120,6 +110,7 @@ export const ProductFormScreen = ({route, navigation}) => {
   };
 
   const addProduct = () => {
+    setLoading(true);
     if (
       name === '' ||
       brand === '' ||
@@ -136,13 +127,6 @@ export const ProductFormScreen = ({route, navigation}) => {
 
     let formData = new FormData();
 
-    const newImageURI = 'file:///' + image.split('file:/').join('');
-
-    formData.append('image', {
-      uri: newImageURI,
-      type: mime.getType(newImageURI),
-      name: newImageURI.split('/').pop(),
-    });
     formData.append('name', name);
     formData.append('brand', brand);
     formData.append('price', price);
@@ -161,6 +145,18 @@ export const ProductFormScreen = ({route, navigation}) => {
       },
     };
 
+    if (image.startsWith('file')) {
+      const newImageURI = 'file:///' + image.split('file:/').join('');
+
+      formData.append('image', {
+        uri: newImageURI,
+        type: mime.getType(newImageURI),
+        name: newImageURI.split('/').pop(),
+      });
+    }
+
+    console.log(formData);
+
     if (item !== null) {
       axios
         .put(`${baseURL}products/${item.id}`, formData, config)
@@ -176,6 +172,7 @@ export const ProductFormScreen = ({route, navigation}) => {
               navigation.navigate('Products');
             }, 500);
           }
+          setLoading(false);
         })
         .catch(err => {
           Toast.show({
@@ -185,6 +182,7 @@ export const ProductFormScreen = ({route, navigation}) => {
             text2: 'Please try again later',
           });
           console.log(err);
+          setLoading(false);
         });
     } else {
       axios
@@ -201,6 +199,7 @@ export const ProductFormScreen = ({route, navigation}) => {
               navigation.navigate('Products');
             }, 500);
           }
+          setLoading(false);
         })
         .catch(err => {
           Toast.show({
@@ -210,6 +209,7 @@ export const ProductFormScreen = ({route, navigation}) => {
             text2: 'Please try again later',
           });
           console.log(err);
+          setLoading(false);
         });
     }
   };
@@ -226,7 +226,7 @@ export const ProductFormScreen = ({route, navigation}) => {
             source={{
               uri: mainImage
                 ? mainImage
-                : 'https://cdn-icons-png.flaticon.com/512/3249/3249934.png',
+                : 'https://cdn-icons-png.flaticon.com/512/5918/5918050.png',
             }}
           />
           <TouchableOpacity onPress={pickImage} style={styles.imagePicker}>
@@ -331,15 +331,17 @@ export const ProductFormScreen = ({route, navigation}) => {
         </View>
         {error && <Error message={error} />}
         <View style={styles.buttonsContainer}>
-          <Button
-            mode="contained"
-            onPress={addProduct}
-            style={styles.confirmButton}
+          <CustomButton
+            color={theme.colors.brand.primary}
+            isLoading={loading}
+            indicator="default"
+            loaderColor={theme.colors.brand.fourth}
             icon={{
               uri: 'https://cdn-icons-png.flaticon.com/512/4442/4442531.png',
-            }}>
-            Confirm
-          </Button>
+            }}
+            text="Confirm"
+            onPress={addProduct}
+          />
         </View>
       </FormContainer>
     </KeyboardAwareScrollView>

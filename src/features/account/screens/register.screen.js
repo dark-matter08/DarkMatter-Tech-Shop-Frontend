@@ -11,6 +11,7 @@ import {Error} from '../../../components/error/error.component';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {theme} from '../../../infrastructure/theme';
 import baseURL from '../../../../assets/common/baseURL';
+import {Button as CustomButton} from '../../../components/button/button.component';
 
 export const RegisterScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -18,8 +19,10 @@ export const RegisterScreen = ({navigation}) => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const register = () => {
+    setLoading(true);
     if (email === '' || name === '' || phone === '' || password === '') {
       setError('Please fill in all fields');
       return;
@@ -52,6 +55,7 @@ export const RegisterScreen = ({navigation}) => {
           }, 500);
         }
         console.log(res);
+        setLoading(false);
       })
       .catch(err => {
         console.log(err);
@@ -61,6 +65,7 @@ export const RegisterScreen = ({navigation}) => {
           text1: 'somethin went wrong, try again later',
           text2: err,
         });
+        setLoading(false);
       });
     return null;
   };
@@ -99,15 +104,18 @@ export const RegisterScreen = ({navigation}) => {
         />
         <View>{error && <Error message={error} />}</View>
         <View style={styles.buttonGroup}>
-          <Button
-            style={styles.loginButton}
+          <CustomButton
+            color={theme.colors.brand.primary}
+            isLoading={loading}
+            button_width="80%"
+            indicator="default"
+            loaderColor={theme.colors.brand.fourth}
             icon={{
               uri: 'https://cdn-icons-png.flaticon.com/512/535/535194.png',
             }}
-            mode="contained"
-            onPress={register}>
-            Register
-          </Button>
+            text="Register"
+            onPress={register}
+          />
         </View>
         <View style={styles.buttonGroup}>
           <Text style={styles.middleText}>Already have an account?</Text>

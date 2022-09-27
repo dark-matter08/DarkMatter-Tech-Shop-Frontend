@@ -99,7 +99,7 @@ export const ListItem = ({item, navigation, index, deleteProduct}) => {
           },
         ]}
         onPress={() => {
-          navigation.navigate('Product Details', {item: item});
+          navigation.navigate('ProductForm', {item: item});
         }}
         onLongPress={() => {
           setShowModal(true);

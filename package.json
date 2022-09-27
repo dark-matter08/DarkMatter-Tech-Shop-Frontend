@@ -32,6 +32,7 @@
     "react-native-animated-nav-tab-bar": "^3.1.8",
     "react-native-gesture-handler": "^2.6.1",
     "react-native-image-picker": "^4.10.0",
+    "react-native-indicators": "^0.17.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-lottie-splash-screen": "^1.0.1",
     "react-native-pager-view": "^6.0.0",

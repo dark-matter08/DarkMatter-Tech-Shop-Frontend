@@ -9,12 +9,14 @@ import {Error} from '../../../components/error/error.component';
 
 import AuthContext from '../../../context/store/auth.global';
 import {loginUser} from '../../../context/actions/auth.action';
+import {Button as CustomButton} from '../../../components/button/button.component';
 
 export const LoginScreen = ({navigation}) => {
   const context = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (context.stateUser.isAuthenticated === true) {
@@ -23,6 +25,7 @@ export const LoginScreen = ({navigation}) => {
   }, [context.stateUser.isAuthenticated, navigation]);
 
   const handleSubmit = () => {
+    setLoading(true);
     const user = {
       email,
       password,
@@ -32,7 +35,8 @@ export const LoginScreen = ({navigation}) => {
       setError('Please fill in all fields');
     } else {
       setError('');
-      loginUser(user, context.dispatch);
+      loginUser(user, context.dispatch, setLoading);
+      // setLoading(false);
     }
   };
 
@@ -54,13 +58,18 @@ export const LoginScreen = ({navigation}) => {
       />
       {error && <Error message={error} />}
       <View style={styles.buttonGroup}>
-        <Button
-          style={styles.loginButton}
-          icon={{uri: 'https://cdn-icons-png.flaticon.com/512/535/535194.png'}}
-          mode="contained"
-          onPress={handleSubmit}>
-          Login
-        </Button>
+        <CustomButton
+          color={theme.colors.brand.primary}
+          isLoading={loading}
+          button_width="80%"
+          indicator="default"
+          loaderColor={theme.colors.brand.fourth}
+          icon={{
+            uri: 'https://cdn-icons-png.flaticon.com/512/535/535194.png',
+          }}
+          text="Login"
+          onPress={handleSubmit}
+        />
       </View>
       <View style={styles.buttonGroup}>
         <Text style={styles.middleText}>Don't have an account yet?</Text>

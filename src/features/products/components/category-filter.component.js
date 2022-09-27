@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   },
   badge: {
     marginVertical: 15,
-    marginHorizontal: 5,
+    marginRight: 10,
     paddingHorizontal: 20,
   },
   active: {
