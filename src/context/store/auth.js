@@ -17,13 +17,13 @@ export const AuthProvider = ({children}) => {
     setShowChild(true);
     if (AsyncStorage.jwt) {
       const decoded = AsyncStorage.jwt ? AsyncStorage.jwt : '';
-      if (setShowChild) {
+      if (showChild) {
         dispatch(setCurrentUser(jwt_decode(decoded)));
       }
     }
 
     return () => setShowChild(false);
-  }, []);
+  }, [showChild]);
 
   if (!showChild) {
     return null;

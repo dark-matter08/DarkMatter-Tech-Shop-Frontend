@@ -73,7 +73,6 @@ const ConfirmScreen = ({route, navigation, clearCart}) => {
           setTimeout(() => {
             clearCart();
             navigation.navigate('CartScreen');
-            console.log('done');
           }, 500);
         }
       })

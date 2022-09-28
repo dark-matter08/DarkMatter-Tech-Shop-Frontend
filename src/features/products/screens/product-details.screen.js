@@ -17,7 +17,7 @@ export const ProductDetailsScreen = ({route, navigation, addItemToCart}) => {
     if (item.countInStock === 0) {
       setAvailabilityText('Unavailable');
     } else if (item.countInStock <= 5) {
-      setAvailabilityText('Limited Stock');
+      setAvailabilityText('Limited');
     } else {
       setAvailabilityText('Available');
     }

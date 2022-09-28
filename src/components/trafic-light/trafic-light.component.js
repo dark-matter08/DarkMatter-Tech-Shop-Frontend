@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native';
 export const TraficLight = ({availability}) => {
   if (availability === 'Unavailable') {
     return <View style={[styles.trafficLight, styles.styleUnavailable]} />;
-  } else if (availability === 'Limited Stock') {
+  } else if (availability === 'Limited') {
     return <View style={[styles.trafficLight, styles.styleLimited]} />;
   } else {
     return <View style={[styles.trafficLight, styles.styleAvailable]} />;

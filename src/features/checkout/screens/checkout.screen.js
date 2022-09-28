@@ -39,6 +39,7 @@ const CheckoutScreen = ({cartItems, navigation}) => {
       phone,
       shippingAddress1: address,
       shippingAddress2: address2,
+      status: '3',
       zip,
     };
 
