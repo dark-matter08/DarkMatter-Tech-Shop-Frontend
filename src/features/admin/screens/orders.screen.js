@@ -7,7 +7,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {OrderCard} from '../components/order-card.component';
 
-export const OrdersScreen = () => {
+export const OrdersScreen = ({navigation}) => {
   const [orderList, setOrderList] = useState();
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState();
@@ -59,7 +59,9 @@ export const OrdersScreen = () => {
     <View>
       <FlatList
         data={orderList}
-        renderItem={({item, index}) => <OrderCard order={item} />}
+        renderItem={({item, index}) => (
+          <OrderCard order={item} navigation={navigation} />
+        )}
       />
     </View>
   );

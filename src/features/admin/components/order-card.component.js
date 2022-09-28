@@ -19,14 +19,24 @@ const codes = [
   {name: 'Delivered', code: '1'},
 ];
 
-export const OrderCard = ({order}) => {
+export const OrderCard = ({order, navigation}) => {
   const [orderStatus, setOrderStatus] = useState();
   const [statusText, setStatusText] = useState();
   const [statusChange, setStatusChange] = useState();
   const [token, setToken] = useState();
   const [cardColor, setCardColor] = useState();
+  const [loading, setLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
 
   useEffect(() => {
+    AsyncStorage.getItem('jwt')
+      .then(res => {
+        setToken(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
     setStatusChange(order.status);
     if (order.status === '3') {
       setStatusText('pending');
@@ -46,8 +56,62 @@ export const OrderCard = ({order}) => {
       setOrderStatus();
       setCardColor();
       setStatusChange();
+      setToken();
     };
   }, [order]);
+
+  const updateOrder = () => {
+    setUpdateLoading(true);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const order_update = {
+      city: order.city,
+      country: order.country,
+      shippingAddress1: order.shippingAddress1,
+      shippingAddress2: order.shippingAddress2,
+      zip: order.zip,
+      phone: order.phone,
+      id: order.id,
+      orderItems: order.orderItems,
+      user: order.user,
+      status: statusChange,
+      totalPrice: order.totalPrice,
+      dateOrdered: order.dateOrdered,
+    };
+
+    console.log(order_update);
+
+    axios
+      .put(`${baseURL}orders/${order.id}`, order_update, config)
+      .then(res => {
+        if (res.status === 200 || res.status === 201) {
+          Toast.show({
+            topOffset: 60,
+            type: 'success',
+            text1: 'Order Updated',
+            text2: '',
+          });
+          setUpdateLoading(false);
+          setTimeout(() => {
+            navigation.navigate('Products');
+          }, 500);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        Toast.show({
+          topOffset: 60,
+          type: 'error',
+          text1: 'Something went wrong',
+          text2: 'Please try again',
+        });
+        setUpdateLoading(false);
+      });
+  };
 
   return (
     <View style={[{backgroundColor: cardColor}, styles.container]}>
@@ -76,7 +140,7 @@ export const OrderCard = ({order}) => {
           style={styles.categorySelector}
           iosIcon={
             <FontAwesomeIcon
-              size={20}
+              size={'lg'}
               color={'orange'}
               icon={faArrowAltCircleDown}
             />
@@ -95,7 +159,9 @@ export const OrderCard = ({order}) => {
         <View style={styles.buttonView}>
           <Button
             text="Update"
+            isLoading={updateLoading}
             button_width={'65%'}
+            onPress={updateOrder}
             icon={{
               uri: 'https://cdn-icons-png.flaticon.com/512/2742/2742409.png',
             }}

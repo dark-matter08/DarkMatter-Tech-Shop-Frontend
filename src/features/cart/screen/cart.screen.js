@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import {Dimensions, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {Button} from 'react-native-paper';
@@ -15,9 +15,14 @@ import {CartItem} from '../components/cart-item.component';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {propsFlattener} from 'native-base/lib/typescript/hooks/useThemeProps/propsFlattener';
 
+import AuthContext from '../../../context/store/auth.global';
+import {loginUser} from '../../../context/actions/auth.action';
+
 var {height, width} = Dimensions.get('window');
 
 const CartScreen = ({cartItems, clearCart, removeFromCart, navigation}) => {
+  const context = useContext(AuthContext);
+
   var total = 0;
   cartItems.forEach(cart => {
     return (total += cart.product.price);
@@ -70,17 +75,31 @@ const CartScreen = ({cartItems, clearCart, removeFromCart, navigation}) => {
                 }}>
                 Clear
               </Button>
-              <Button
-                mode="contained"
-                style={styles.button}
-                icon={{
-                  uri: 'https://cdn-icons-png.flaticon.com/512/2435/2435281.png',
-                }}
-                onPress={() => {
-                  navigation.navigate('Checkout');
-                }}>
-                Checkout
-              </Button>
+              {context.stateUser.isAuthenticated ? (
+                <Button
+                  mode="contained"
+                  style={styles.button}
+                  icon={{
+                    uri: 'https://cdn-icons-png.flaticon.com/512/2435/2435281.png',
+                  }}
+                  onPress={() => {
+                    navigation.navigate('Checkout');
+                  }}>
+                  Checkout
+                </Button>
+              ) : (
+                <Button
+                  mode="contained"
+                  style={styles.button}
+                  icon={{
+                    uri: 'https://cdn-icons-png.flaticon.com/512/2435/2435281.png',
+                  }}
+                  onPress={() => {
+                    navigation.navigate('Login');
+                  }}>
+                  Checkout
+                </Button>
+              )}
             </View>
           </View>
         </View>
