@@ -42,13 +42,18 @@ export const ProductScreen = ({navigation}) => {
 
       // products ===================
 
-      axios.get(`${baseURL}products`).then(res => {
-        setProducts(res.data);
-        setProductsFiltered(res.data);
-        setInitialState(res.data);
-        setProductCat(res.data);
-        setLoading(false);
-      });
+      axios
+        .get(`${baseURL}products`)
+        .then(res => {
+          setProducts(res.data);
+          setProductsFiltered(res.data);
+          setInitialState(res.data);
+          setProductCat(res.data);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.log(err);
+        });
 
       // categories ===================
 

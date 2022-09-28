@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, Select, Box, CheckIcon, Center, Icon} from 'native-base';
 import {Avatar, Button, List, RadioButton} from 'react-native-paper';
 import {View, StyleSheet} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faArrowAltCircleDown} from '@fortawesome/free-solid-svg-icons';
+import {Toast} from 'react-native-toast-message/lib/src/Toast';
 
 const methods = [
   {
@@ -31,9 +32,24 @@ const paymentCards = [
 ];
 
 export const PaymentScreen = ({route, navigation}) => {
-  const order = route.params;
   const [selected, setSelected] = useState();
+  const [order, setOrder] = useState([]);
   const [card, setCard] = useState();
+
+  useEffect(() => {
+    if (!route.params) {
+      setTimeout(() => {
+        navigation.navigate('Shipping');
+      }, 500);
+    }
+    setOrder(route.params);
+
+    return () => {
+      setOrder([]);
+    };
+  }, [route.params, navigation]);
+
+  console.log(order);
 
   return (
     <View>

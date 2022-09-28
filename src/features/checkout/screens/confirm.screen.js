@@ -1,24 +1,92 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import {Text} from 'native-base';
 import {connect} from 'react-redux';
 import * as actions from '../../../redux/actions/cart.action';
-import {Avatar, Button, List} from 'react-native-paper';
-// import {  } from 'react-native-gesture-handler';
+import {Avatar, List} from 'react-native-paper';
+import {Button} from '../../../components/button/button.component';
+
+import Toast from 'react-native-toast-message';
+import axios from 'axios';
+import baseURL from '../../../../assets/common/baseURL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {theme} from '../../../infrastructure/theme';
 
 var {height, width} = Dimensions.get('window');
 
-export const ConfirmScreen = ({route, navigation, clearCart}) => {
+const ConfirmScreen = ({route, navigation, clearCart}) => {
+  const [token, setToken] = useState();
+  const [loading, setLoading] = useState(false);
+
   let orderDetails;
   if (route.params) {
     orderDetails = route.params.order.order;
   }
 
+  useEffect(() => {
+    // get jwt token
+    setLoading(false);
+    AsyncStorage.getItem('jwt')
+      .then(res => {
+        setToken(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
+
   const confirmOrder = () => {
-    setTimeout(() => {
-      clearCart();
-      navigation.navigate('CartScreen');
-    }, 500);
+    setLoading(true);
+    const orderItemsIds = orderDetails.orderItems.map(item => {
+      return {product: item.product._id, quantity: item.quantity};
+    });
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const order = {
+      city: orderDetails.city,
+      country: orderDetails.country,
+      shippingAddress1: orderDetails.shippingAddress1,
+      shippingAddress2: orderDetails.shippingAddress2,
+      zip: orderDetails.zip,
+      phone: orderDetails.phone,
+      orderItems: orderItemsIds,
+      user: '632fc88d3897bbcebcc3b2b4',
+    };
+    console.log(order);
+
+    axios
+      .post(`${baseURL}orders`, order, config)
+      .then(res => {
+        if (res.status === 200 || res.status === 201) {
+          Toast.show({
+            topOffset: 60,
+            type: 'success',
+            text1: 'Order Complete',
+            text2: '',
+          });
+          setLoading(false);
+          setTimeout(() => {
+            clearCart();
+            navigation.navigate('CartScreen');
+            console.log('done');
+          }, 500);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        Toast.show({
+          topOffset: 60,
+          type: 'error',
+          text1: 'Something went wrong',
+          text2: 'Please try again',
+        });
+        setLoading(false);
+      });
   };
 
   // const confirm
@@ -73,9 +141,18 @@ export const ConfirmScreen = ({route, navigation, clearCart}) => {
           </View>
         )}
         <View style={styles.bottomView}>
-          <Button style={styles.button} mode="contained" onPress={confirmOrder}>
-            Place Order
-          </Button>
+          <Button
+            color={theme.colors.brand.tertiary}
+            isLoading={loading}
+            button_width="80%"
+            indicator="default"
+            loaderColor={theme.colors.brand.fourth}
+            icon={{
+              uri: 'https://cdn-icons-png.flaticon.com/512/2558/2558180.png',
+            }}
+            text="Place Order"
+            onPress={confirmOrder}
+          />
         </View>
       </View>
     </ScrollView>

@@ -20,11 +20,7 @@ export const CartNavigator = () => {
         CardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
       }}>
       <CartStack.Screen name="CartScreen" component={CartScreen} />
-      <CartStack.Screen
-        name="Checkout"
-        component={CheckoutNavigator}
-        options={{gestureEnabled: false}}
-      />
+      <CartStack.Screen name="Checkout" component={CheckoutNavigator} />
     </CartStack.Navigator>
   );
 };

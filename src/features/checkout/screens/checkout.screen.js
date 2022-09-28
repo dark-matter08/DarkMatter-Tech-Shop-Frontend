@@ -103,10 +103,7 @@ const CheckoutScreen = ({cartItems, navigation}) => {
           })}
         </Select>
         <View style={styles.bottomView}>
-          <Button
-            mode="contained"
-            onPress={() => checkOut()}
-            style={styles.button}>
+          <Button mode="contained" onPress={checkOut} style={styles.button}>
             Confirm
           </Button>
         </View>
