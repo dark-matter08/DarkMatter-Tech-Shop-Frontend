@@ -2,6 +2,7 @@ import jwt_decode from 'jwt-decode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import baseURL from '../../../assets/common/baseURL';
+import axios from 'axios';
 
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 
@@ -45,21 +46,26 @@ export const loginUser = (user, dispatch, setLoading) => {
     });
 };
 
-export const getUserProfile = (id, user) => {
-  fetch(`${baseURL}users/${id}`, {
-    method: 'GET',
-    body: JSON.stringify(user),
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      AsyncStorage.setItem('user', data);
+export const getUserProfile = (id, setUserProfile, setLoading) => {
+  AsyncStorage.getItem('jwt')
+    .then(token => {
+      axios
+        .get(`${baseURL}users/${id}`, {
+          headers: {Authorization: `Bearer ${token}`},
+        })
+        .then(user => {
+          AsyncStorage.setItem('user', user);
+          setUserProfile(user);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.log(err);
+          setLoading(false);
+        });
     })
-    .catch(err => console.log(err));
+    .catch(error => {
+      console.log(error);
+    });
 };
 
 export const logoutUser = dispatch => {

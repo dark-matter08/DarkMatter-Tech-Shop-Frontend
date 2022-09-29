@@ -12,18 +12,34 @@ export const AuthProvider = ({children}) => {
     user: {},
   });
   const [showChild, setShowChild] = useState(false);
+  const [token, setToken] = useState();
+  const [user, setUser] = useState();
 
   useEffect(() => {
     setShowChild(true);
-    if (AsyncStorage.jwt) {
-      const decoded = AsyncStorage.jwt ? AsyncStorage.jwt : '';
+    AsyncStorage.getItem('jwt')
+      .then(res => {
+        setToken(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    AsyncStorage.getItem('user')
+      .then(res => {
+        setUser(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    if (token) {
+      const decoded = jwt_decode(token);
       if (showChild) {
-        dispatch(setCurrentUser(jwt_decode(decoded)));
+        dispatch(setCurrentUser(decoded, user));
       }
     }
 
     return () => setShowChild(false);
-  }, [showChild]);
+  }, [showChild, token, user]);
 
   if (!showChild) {
     return null;
