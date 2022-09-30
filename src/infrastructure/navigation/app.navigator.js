@@ -46,6 +46,7 @@ const screenOptions = ({route}) => {
 
 export const AppNavigator = () => {
   const context = useContext(AuthContext);
+  // console.log(context);
   return (
     <Tab.Navigator
       screenOptions={screenOptions}

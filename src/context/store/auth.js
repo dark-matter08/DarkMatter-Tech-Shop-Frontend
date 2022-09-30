@@ -31,15 +31,16 @@ export const AuthProvider = ({children}) => {
       .catch(err => {
         console.log(err);
       });
+
     if (token) {
       const decoded = jwt_decode(token);
-      if (showChild) {
-        dispatch(setCurrentUser(decoded, user));
+      if (setShowChild) {
+        dispatch(setCurrentUser(decoded));
       }
     }
 
     return () => setShowChild(false);
-  }, [showChild, token, user]);
+  }, [showChild, token]);
 
   if (!showChild) {
     return null;

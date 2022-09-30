@@ -47,6 +47,7 @@ export const loginUser = (user, dispatch, setLoading) => {
 };
 
 export const getUserProfile = (id, setUserProfile, setLoading) => {
+  setLoading(true);
   AsyncStorage.getItem('jwt')
     .then(token => {
       axios

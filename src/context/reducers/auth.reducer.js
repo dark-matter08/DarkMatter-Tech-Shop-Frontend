@@ -6,7 +6,7 @@ export default function (state, action) {
     case SET_CURRENT_USER:
       return {
         ...state,
-        isAuthenticated: !isEmpty(action.payload), //TODO
+        isAuthenticated: !isEmpty(action.payload),
         user: action.payload,
         userProfile: action.userProfile,
       };

@@ -15,26 +15,32 @@ import {theme} from '../../../infrastructure/theme';
 export const UserProfileScreen = ({navigation}) => {
   const context = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const [userProfile, setUserProfile] = useState();
+  const [userProfile, setUserProfile] = useState(null);
 
-  useEffect(() => {
-    if (
-      context.stateUser.isAuthenticated === false ||
-      context.stateUser.isAuthenticated === null
-    ) {
-      navigation.navigate('Login');
-    } else {
-      getUserProfile(context.stateUser.user.userId, setUserProfile, setLoading);
-    }
+  useFocusEffect(
+    useCallback(() => {
+      if (
+        context.stateUser.isAuthenticated === false ||
+        context.stateUser.isAuthenticated === null
+      ) {
+        navigation.navigate('Login');
+      } else {
+        getUserProfile(
+          context.stateUser.user.userId,
+          setUserProfile,
+          setLoading,
+        );
+      }
 
-    return () => {
-      setUserProfile();
-    };
-  }, [
-    context.stateUser.isAuthenticated,
-    context.stateUser.user.userId,
-    navigation,
-  ]);
+      return () => {
+        setUserProfile();
+      };
+    }, [
+      context.stateUser.isAuthenticated,
+      context.stateUser.user.userId,
+      navigation,
+    ]),
+  );
 
   return (
     <View style={styles.container}>
@@ -79,6 +85,10 @@ export const UserProfileScreen = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  center: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     justifyContent: 'center',
     alignItems: 'center',

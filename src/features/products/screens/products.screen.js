@@ -2,7 +2,6 @@ import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   StyleSheet,
-  ActivityIndicator,
   FlatList,
   TouchableOpacity,
   Dimensions,
@@ -22,6 +21,7 @@ import {Banner} from '../../../components/banner/banner.component';
 import {CategoryFilter} from '../components/category-filter.component';
 
 import baseURL from '../../../../assets/common/baseURL';
+import {ActivityIndicator} from 'react-native-paper';
 
 var {height} = Dimensions.get('window');
 
