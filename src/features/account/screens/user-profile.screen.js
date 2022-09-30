@@ -23,9 +23,9 @@ export const UserProfileScreen = ({navigation}) => {
       context.stateUser.isAuthenticated === null
     ) {
       navigation.navigate('Login');
+    } else {
+      getUserProfile(context.stateUser.user.userId, setUserProfile, setLoading);
     }
-
-    getUserProfile(context.stateUser.user.userId, setUserProfile, setLoading);
 
     return () => {
       setUserProfile();

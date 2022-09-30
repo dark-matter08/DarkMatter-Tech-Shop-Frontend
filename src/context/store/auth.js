@@ -26,7 +26,7 @@ export const AuthProvider = ({children}) => {
       });
     AsyncStorage.getItem('user')
       .then(res => {
-        setUser(res);
+        setUser(JSON.parse(res));
       })
       .catch(err => {
         console.log(err);

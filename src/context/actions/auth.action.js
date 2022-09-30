@@ -54,11 +54,12 @@ export const getUserProfile = (id, setUserProfile, setLoading) => {
           headers: {Authorization: `Bearer ${token}`},
         })
         .then(user => {
-          AsyncStorage.setItem('user', user);
-          setUserProfile(user);
+          AsyncStorage.setItem('user', JSON.stringify(user.data));
+          setUserProfile(user.data);
           setLoading(false);
         })
         .catch(err => {
+          console.log('======== get user details error =========');
           console.log(err);
           setLoading(false);
         });
