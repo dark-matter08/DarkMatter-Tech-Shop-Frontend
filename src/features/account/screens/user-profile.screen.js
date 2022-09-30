@@ -66,7 +66,13 @@ export const UserProfileScreen = ({navigation}) => {
           </View>
         </ScrollView>
       ) : (
-        <ActivityIndicator />
+        <View
+          style={[styles.center, {backgroundColor: '#f2f2f2', height: '100%'}]}>
+          <ActivityIndicator
+            size={'large'}
+            color={theme.colors.brand.primary}
+          />
+        </View>
       )}
     </View>
   );
