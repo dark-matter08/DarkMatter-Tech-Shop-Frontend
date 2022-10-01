@@ -97,7 +97,7 @@ const CartScreen = ({cartItems, clearCart, removeFromCart, navigation}) => {
                   onPress={() => {
                     navigation.navigate('Login');
                   }}>
-                  Checkout
+                  Login
                 </Button>
               )}
             </View>
