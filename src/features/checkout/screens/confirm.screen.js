@@ -55,7 +55,7 @@ const ConfirmScreen = ({route, navigation, clearCart}) => {
       zip: orderDetails.zip,
       phone: orderDetails.phone,
       orderItems: orderItemsIds,
-      user: '632fc88d3897bbcebcc3b2b4',
+      user: orderDetails.user,
     };
     console.log(order);
 

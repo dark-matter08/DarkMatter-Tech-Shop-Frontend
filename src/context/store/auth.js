@@ -34,8 +34,11 @@ export const AuthProvider = ({children}) => {
 
     if (token) {
       const decoded = jwt_decode(token);
-      if (setShowChild) {
-        dispatch(setCurrentUser(decoded));
+      var date_now = Math.round(new Date().getTime() / 1000);
+      if (decoded.exp > date_now) {
+        if (setShowChild) {
+          dispatch(setCurrentUser(decoded));
+        }
       }
     }
 

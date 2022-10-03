@@ -67,7 +67,7 @@ export const OrdersScreen = ({navigation}) => {
           <FlatList
             data={orderList}
             renderItem={({item, index}) => (
-              <OrderCard order={item} navigation={navigation} />
+              <OrderCard order={item} navigation={navigation} editMode={true} />
             )}
           />
         </View>

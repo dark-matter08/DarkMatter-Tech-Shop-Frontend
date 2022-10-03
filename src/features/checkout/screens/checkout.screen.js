@@ -1,15 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Select, Icon} from 'native-base';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {connect} from 'react-redux';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {faArrowAltCircleDown} from '@fortawesome/free-solid-svg-icons';
+import {Toast} from 'react-native-toast-message/lib/src/Toast';
 
 import {FormContainer} from '../../../components/form/form-container.component';
 import {Input} from '../../../components/form/input.component';
 import {Button} from 'react-native-paper';
 import {theme} from '../../../infrastructure/theme';
+import AuthContext from '../../../context/store/auth.global';
 
 const countries = require('../../../../assets/data/countries.json');
 
@@ -21,14 +23,33 @@ const CheckoutScreen = ({cartItems, navigation}) => {
   const [zip, setZip] = useState();
   const [country, setCountry] = useState();
   const [phone, setPhone] = useState();
+  const [user, setUser] = useState();
+
+  const context = useContext(AuthContext);
 
   useEffect(() => {
     setOrderItems(cartItems);
+    if (context.stateUser.user.isAuthenticated) {
+      setUser(context.stateUser.user.userId);
+    } else {
+      navigation.navigate('Cart');
+      Toast.show({
+        topOffset: 60,
+        type: 'error',
+        text1: 'Please login to checkout',
+        text2: '',
+      });
+    }
 
     return () => {
       setOrderItems();
     };
-  }, [cartItems]);
+  }, [
+    cartItems,
+    context.stateUser.user.userId,
+    context.stateUser.user.isAuthenticated,
+    navigation,
+  ]);
 
   const checkOut = () => {
     let order = {
@@ -40,6 +61,7 @@ const CheckoutScreen = ({cartItems, navigation}) => {
       shippingAddress1: address,
       shippingAddress2: address2,
       status: '3',
+      user,
       zip,
     };
 

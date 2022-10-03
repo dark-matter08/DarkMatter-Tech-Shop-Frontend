@@ -19,7 +19,7 @@ const codes = [
   {name: 'Delivered', code: '1'},
 ];
 
-export const OrderCard = ({order, navigation}) => {
+export const OrderCard = ({order, navigation, editMode = false}) => {
   const [orderStatus, setOrderStatus] = useState();
   const [statusText, setStatusText] = useState();
   const [statusChange, setStatusChange] = useState();
@@ -114,7 +114,7 @@ export const OrderCard = ({order, navigation}) => {
   };
 
   return (
-    <View style={[{backgroundColor: cardColor}, styles.container]}>
+    <View style={[{backgroundColor: 'cardColor'}, styles.container]}>
       <View style={styles.title}>
         <Text>Order Number: {order.id}</Text>
       </View>
@@ -135,38 +135,44 @@ export const OrderCard = ({order, navigation}) => {
           <Text>Price: </Text>
           <Text style={styles.price}>$ {order.totalPrice}</Text>
         </View>
-        <Select
-          mode="dropdown"
-          style={styles.categorySelector}
-          iosIcon={
-            <FontAwesomeIcon
-              size={'lg'}
-              color={'orange'}
-              icon={faArrowAltCircleDown}
-            />
-          }
-          width={undefined}
-          selectedValue={statusChange}
-          placeholder="Change Status"
-          placeholderIconColor="#007aff"
-          onValueChange={e => {
-            setStatusChange(e);
-          }}>
-          {codes.map(c => {
-            return <Select.Item key={c.code} label={c.name} value={c.code} />;
-          })}
-        </Select>
-        <View style={styles.buttonView}>
-          <Button
-            text="Update"
-            isLoading={updateLoading}
-            button_width={'65%'}
-            onPress={updateOrder}
-            icon={{
-              uri: 'https://cdn-icons-png.flaticon.com/512/2742/2742409.png',
-            }}
-          />
-        </View>
+        {editMode && (
+          <View>
+            <Select
+              mode="dropdown"
+              style={styles.categorySelector}
+              iosIcon={
+                <FontAwesomeIcon
+                  size={'lg'}
+                  color={'orange'}
+                  icon={faArrowAltCircleDown}
+                />
+              }
+              width={undefined}
+              selectedValue={statusChange}
+              placeholder="Change Status"
+              placeholderIconColor="#007aff"
+              onValueChange={e => {
+                setStatusChange(e);
+              }}>
+              {codes.map(c => {
+                return (
+                  <Select.Item key={c.code} label={c.name} value={c.code} />
+                );
+              })}
+            </Select>
+            <View style={styles.buttonView}>
+              <Button
+                text="Update"
+                isLoading={updateLoading}
+                button_width={'65%'}
+                onPress={updateOrder}
+                icon={{
+                  uri: 'https://cdn-icons-png.flaticon.com/512/2742/2742409.png',
+                }}
+              />
+            </View>
+          </View>
+        )}
       </View>
     </View>
   );
